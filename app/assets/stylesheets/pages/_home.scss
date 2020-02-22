@@ -1,1 +1,22 @@
 // Specific CSS for your home-page
+.my-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40px;
+}
+
+td {
+  height: 100px;
+  width: 100px;
+  border: 1px solid black;
+}
+
+.alive {
+  background-color: black;
+}
+
+#start-game {
+  margin: 20px;
+  width: 200px;
+}
