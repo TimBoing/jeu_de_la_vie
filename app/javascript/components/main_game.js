@@ -1,5 +1,6 @@
 const myFunc = () => {
   const myButton = document.getElementById('start-game');
+  const stopButton = document.getElementById('stop-game');
   const board = document.querySelector('table')
   const cells = document.querySelectorAll('td');
   const lastCell = cells[cells.length -1];
@@ -127,11 +128,6 @@ const myFunc = () => {
     });
   }
 
-
-  myButton.addEventListener(('click'), (event) => {
-    setInterval(toggleThem, 1000);
-  });
-
   cells.forEach((cell) => {
     cell.addEventListener('click',(event) => {
       if(cell.classList.contains('alive')){
@@ -141,6 +137,18 @@ const myFunc = () => {
       }
     })
   })
+
+
+
+  myButton.addEventListener(('click'), (event) => {
+    const myInterval = setInterval(toggleThem, 1000);
+
+    stopButton.addEventListener(('click'), (event) => {
+      clearInterval(myInterval);
+    });
+  });
+
+
 
   document.addEventListener("DOMContentLoaded", () => {
      // Every 1 second, the `refresh` function is called.

@@ -20,6 +20,15 @@ td {
 #start-game {
   margin: 20px;
   width: 200px;
+  background-color: green;
+  border: 1px solid green;
+}
+
+#stop-game {
+  margin: 20px;
+  width: 200px;
+  background-color: red;
+  border: 1px solid red;
 }
 
 .found {
