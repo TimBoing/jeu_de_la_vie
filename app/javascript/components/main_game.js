@@ -1,6 +1,8 @@
 const myFunc = () => {
   const myButton = document.getElementById('start-game');
   const stopButton = document.getElementById('stop-game');
+  const myCounter = document.getElementById('my-counter');
+  let counter = 0;
   const board = document.querySelector('table')
   const cells = document.querySelectorAll('td');
   const lastCell = cells[cells.length -1];
@@ -88,6 +90,8 @@ const myFunc = () => {
   }
 
   const toggleThem = () => {
+    counter += 1;
+    myCounter.innerText = counter;
 
     const isOne = (cell) => {
       let cellRow = cell.parentElement.rowIndex;
@@ -141,7 +145,7 @@ const myFunc = () => {
 
 
   myButton.addEventListener(('click'), (event) => {
-    const myInterval = setInterval(toggleThem, 1000);
+    const myInterval = setInterval(toggleThem, 1);
 
     stopButton.addEventListener(('click'), (event) => {
       clearInterval(myInterval);
