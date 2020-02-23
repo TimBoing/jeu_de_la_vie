@@ -1,6 +1,8 @@
 const myFunc = () => {
-  const myButton = document.getElementById('start-game');
+  const startButton = document.getElementById('start-game');
   const stopButton = document.getElementById('stop-game');
+  const clearButton = document.getElementById('clear');
+  const randButton = document.getElementById('randomize');
   const myCounter = document.getElementById('my-counter');
   let counter = 0;
   const board = document.querySelector('table')
@@ -9,22 +11,35 @@ const myFunc = () => {
   const lastCellRow = lastCell.parentElement.rowIndex;
   const lastCellColumn = lastCell.cellIndex;
   let theBoard = [];
+  let newBoard = [];
 
   //create a multidimensional array with for each row and populate the multidimensional array with dead cells
-  for(let i = 0; i <= lastCellRow; i += 1) {
+
+  const resetBoards = () => {
+    for(let i = 0; i <= lastCellRow; i += 1) {
     theBoard.push([]);
-    for (let j = 0; j <= lastCellColumn; j += 1) {
-      theBoard[i][j] = 0;
+      for (let j = 0; j <= lastCellColumn; j += 1) {
+        theBoard[i][j] = 0;
+      }
     }
+    newBoard = theBoard.slice().map( function(row){ return row.slice(); });;
   }
 
-  let newBoard = theBoard.slice().map( function(row){ return row.slice(); });;
+   const resetEverything = () => {
+    myCounter.innerText = 0;
+    resetBoards();
+    cells.forEach((cell) => {
+        if(cell.classList.contains('alive')) {
+          cell.classList.remove('alive');
+        }
+    });
+  }
+
+  // Initialize blank board
+  resetBoards();
 
   const isAlive = (cellRow, cellColumn) => {
     let countAdj = 0;
-
-    //console.log(`condition 1 : ${board.rows[cellRow - 1] !== undefined}`);
-    // console.log(`condition 2 : ${board.rows[cellRow - 1].cells[ cellColumn - 1] !== undefined}`);
 
     // Check if neighbours exist and increment countAdj for living neighbours
     if((cellRow - 1) >= 0 && (cellColumn - 1) >= 0) {
@@ -154,6 +169,7 @@ const myFunc = () => {
   }
 
 
+
   // EVENT LISTENERS --------------------------------------
 
   // Allow to change cells status by clicking on them
@@ -171,12 +187,42 @@ const myFunc = () => {
     })
   })
 
-  myButton.addEventListener(('click'), (event) => {
-    const myInterval = setInterval(toggleThem, 1000);
+  startButton.addEventListener(('click'), (event) => {
+    const myInterval = setInterval(toggleThem, 100);
 
     stopButton.addEventListener(('click'), (event) => {
       clearInterval(myInterval);
     });
+  });
+
+  clearButton.addEventListener(('click'), (event) => {
+    resetEverything();
+
+  });
+
+  randButton.addEventListener(('click'), (event) => {
+    resetEverything();
+    // populate theBoard with 20% chances of alive for each cell
+    theBoard.forEach((row, rowIndex) => {
+      let cellRow = rowIndex;
+      row.forEach((cell, colIndex) => {
+        let cellColumn = colIndex;
+        if(Math.random() <= 0.2){
+          theBoard[cellRow][cellColumn] = 1;
+        } else {
+          theBoard[cellRow][cellColumn] = 0;
+        }
+      });
+    });
+    // iterate through cells and prepare them according to board
+    cells.forEach((cell) => {
+      let cellRow = cell.parentElement.rowIndex;
+      let cellColumn = cell.cellIndex;
+      if(theBoard[cellRow][cellColumn] === 1){
+        cell.classList.add('alive');
+      }
+    });
+
   });
 
   document.addEventListener("DOMContentLoaded", () => {

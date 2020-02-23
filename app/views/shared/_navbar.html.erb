@@ -9,7 +9,15 @@
 
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div id="my-counter">0</div>
+    <div class="buttons-container">
+      <button id="start-game" class="btn btn-primary">Start!</button>
+      <button id="stop-game" class="btn btn-primary">Stop!</button>
+      <button id="clear" class="btn btn-primary">Clear!</button>
+      <button id="randomize" class="btn btn-primary">Randomize!</button>
+    </div>
     <ul class="navbar-nav mr-auto">
+
       <% if user_signed_in? %>
         <li class="nav-item active">
           <%= link_to "Home", "#", class: "nav-link" %>
