@@ -26,6 +26,7 @@ const myFunc = () => {
   }
 
    const resetEverything = () => {
+    counter = 0;
     myCounter.innerText = 0;
     resetBoards();
     cells.forEach((cell) => {
@@ -188,7 +189,7 @@ const myFunc = () => {
   })
 
   startButton.addEventListener(('click'), (event) => {
-    const myInterval = setInterval(toggleThem, 100);
+    const myInterval = setInterval(toggleThem, 50);
 
     stopButton.addEventListener(('click'), (event) => {
       clearInterval(myInterval);
