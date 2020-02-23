@@ -7,69 +7,81 @@ const myFunc = () => {
   const cells = document.querySelectorAll('td');
   const lastCell = cells[cells.length -1];
   const lastCellRow = lastCell.parentElement.rowIndex;
+  const lastCellColumn = lastCell.cellIndex;
   let theBoard = [];
 
-  //create a multidimensional array for each row
+  //create a multidimensional array with for each row and populate the multidimensional array with dead cells
   for(let i = 0; i <= lastCellRow; i += 1) {
     theBoard.push([]);
-    console.log(i);
+    for (let j = 0; j <= lastCellColumn; j += 1) {
+      theBoard[i][j] = 0;
+    }
   }
 
-  const isAlive = (cell) => {
+  let newBoard = theBoard.slice().map( function(row){ return row.slice(); });;
 
-    const cellRow = cell.parentElement.rowIndex;
-    const cellColumn = cell.cellIndex;
+  const isAlive = (cellRow, cellColumn) => {
     let countAdj = 0;
 
     //console.log(`condition 1 : ${board.rows[cellRow - 1] !== undefined}`);
     // console.log(`condition 2 : ${board.rows[cellRow - 1].cells[ cellColumn - 1] !== undefined}`);
 
-    if(board.rows[cellRow - 1] !== undefined && board.rows[cellRow - 1].cells[ cellColumn - 1] !== undefined) {
-      let topLeftC = board.rows[cellRow - 1].cells[ cellColumn - 1];
-      if( topLeftC.classList.contains('alive')) { countAdj += 1 }
+    // Check if neighbours exist and increment countAdj for living neighbours
+    if((cellRow - 1) >= 0 && (cellColumn - 1) >= 0) {
+      let topLeftC = theBoard[cellRow - 1][ cellColumn - 1];
+      countAdj += topLeftC;
+
     }
 
-    if(board.rows[cellRow - 1] !== undefined && board.rows[cellRow - 1].cells[ cellColumn - 1] !== undefined) {
-      let topC = board.rows[cellRow - 1].cells[cellColumn];
-      if( topC.classList.contains('alive')) { countAdj += 1 }
+    if((cellRow - 1) >= 0){
+      let topC = theBoard[cellRow - 1][cellColumn];
+      countAdj += topC;
+
     }
 
-    if(board.rows[cellRow - 1] !== undefined && board.rows[cellRow - 1].cells[ cellColumn + 1] !== undefined) {
-      let topRightC = board.rows[cellRow - 1 ].cells[cellColumn + 1];
-      if(topRightC.classList.contains('alive')) {countAdj += 1}
+    if((cellRow - 1) >= 0 && (cellColumn + 1) <= lastCellColumn) {
+      let topRightC = theBoard[cellRow - 1 ][cellColumn + 1];
+      countAdj += topRightC;
+
     }
 
-    if(board.rows[cellRow] !== undefined && board.rows[cellRow].cells[ cellColumn + 1] !== undefined) {
-      let rightC = board.rows[cellRow].cells[cellColumn + 1];
-      if(rightC.classList.contains('alive')){countAdj += 1}
+    if((cellColumn + 1) <= lastCellColumn) {
+      let rightC = theBoard[cellRow][cellColumn + 1];
+      countAdj += rightC;
+
     }
 
-    if(board.rows[cellRow + 1] !== undefined && board.rows[cellRow + 1].cells[ cellColumn + 1] !== undefined) {
-      let bottomRightC = board.rows[cellRow + 1].cells[cellColumn + 1];
-      if(bottomRightC.classList.contains('alive')){countAdj += 1}
+    if((cellRow + 1) <= lastCellRow && (cellColumn + 1) <= lastCellColumn) {
+      let bottomRightC = theBoard[cellRow + 1][cellColumn + 1];
+      countAdj += bottomRightC;
+
     }
 
-    if(board.rows[cellRow + 1] !== undefined && board.rows[cellRow + 1].cells[cellColumn] !== undefined) {
-      let bottomC = board.rows[cellRow + 1 ].cells[cellColumn];
-      if(bottomC.classList.contains('alive')){countAdj += 1;}
+    if((cellRow + 1) <= lastCellRow) {
+      let bottomC = theBoard[cellRow + 1 ][cellColumn];
+      countAdj += bottomC;
+
       // console.log("I HAVE A BOTTOM");
-      // console.log(`My bottom has the class : ${bottomC.classList.contains('alive')}`);
-      console.log(`Therefore countAdj is : ${countAdj}`);
+      // console.log(`My bottom has the value : ${bottomC}`);
+      // console.log(`Therefore countAdj is : ${countAdj}`);
     }
 
-    if(board.rows[cellRow + 1] !== undefined && board.rows[cellRow + 1].cells[ cellColumn - 1] !== undefined){
-      let bottomLeftC = board.rows[cellRow + 1 ].cells[cellColumn - 1];
-      if(bottomLeftC.classList.contains('alive')){countAdj += 1}
+    if((cellRow + 1) <= lastCellRow &&  (cellColumn - 1) >= 0){
+      let bottomLeftC = theBoard[cellRow + 1 ][cellColumn - 1];
+      countAdj += bottomLeftC;
+
     }
 
-    if(board.rows[cellRow] !== undefined && board.rows[cellRow].cells[ cellColumn - 1] !== undefined) {
-      let leftC = board.rows[cellRow].cells[cellColumn - 1];
-      if(leftC.classList.contains('alive')){countAdj += 1}
+    if((cellColumn - 1) >= 0) {
+      let leftC = theBoard[cellRow][cellColumn - 1];
+      countAdj += leftC;
+
     }
 
-    if(cell.classList.contains('alive')) {
+
+    if(theBoard[cellRow][cellColumn] === 1) {
       // 2 ou 3 voisines vivantes reste vivante
-      console.log('She was alive');
+
       if(countAdj === 2 || countAdj === 3) {
         //console.log(`I return true as the result of countAdj is : ${countAdj}`);
         return true
@@ -96,31 +108,38 @@ const myFunc = () => {
     const isOne = (cell) => {
       let cellRow = cell.parentElement.rowIndex;
       let cellColumn = cell.cellIndex;
-      if(theBoard[cellRow][cellColumn] === 1) {
+      if(newBoard[cellRow][cellColumn] === 1) {
         return true;
       } else {
         return false;
       }
     }
 
-    cells.forEach((cell) => {
-      let cellRow = cell.parentElement.rowIndex;
-      let cellColumn = cell.cellIndex;
-      console.log(`I am checking the cell row : ${cellRow} and column : ${cellColumn}`);
-      if(isAlive(cell)) {
-        theBoard[cellRow][cellColumn] = 1;
-        console.log('SHE IS FUCKING ALIVE!!!!');
-        console.table(theBoard);
-      } else {
-        theBoard[cellRow][cellColumn] = 0;
-        console.table(theBoard);
-      }
+    // calculer les nouveaux statuts et remplir progressivement un nouveau tableau
+    theBoard.forEach((row, rowIndex) => {
+      let cellRow = rowIndex;
+      row.forEach((cell, colIndex) => {
+        let cellColumn = colIndex;
+
+        if(isAlive(cellRow, cellColumn)){
+
+          newBoard[cellRow][cellColumn] = 1;
+
+        } else {
+          newBoard[cellRow][cellColumn] = 0;
+        }
+      });
     });
 
+    // reassigner la valeur de ce nouveau tableau a l´ancien tableau
+
+    theBoard = newBoard.slice().map( function(row){ return row.slice(); });;
+
+    // itérer sur chaque cellule du tableau physique et leur donner une valeur en fonction du nouveau tableau
     cells.forEach((cell) => {
       if(isOne(cell)) {
         if(cell.classList.contains('alive')) {
-
+          //nothing change, she stays alive
         } else {
           cell.classList.add('alive');
         }
@@ -130,29 +149,35 @@ const myFunc = () => {
         }
       }
     });
+
+
   }
 
+
+  // EVENT LISTENERS --------------------------------------
+
+  // Allow to change cells status by clicking on them
   cells.forEach((cell) => {
     cell.addEventListener('click',(event) => {
+      let cellRow = cell.parentElement.rowIndex;
+      let cellColumn = cell.cellIndex;
       if(cell.classList.contains('alive')){
+        theBoard[cellRow][cellColumn] = 0;
         cell.classList.remove('alive');
       } else {
+        theBoard[cellRow][cellColumn] = 1;
         cell.classList.add('alive');
       }
     })
   })
 
-
-
   myButton.addEventListener(('click'), (event) => {
-    const myInterval = setInterval(toggleThem, 1);
+    const myInterval = setInterval(toggleThem, 1000);
 
     stopButton.addEventListener(('click'), (event) => {
       clearInterval(myInterval);
     });
   });
-
-
 
   document.addEventListener("DOMContentLoaded", () => {
      // Every 1 second, the `refresh` function is called.
@@ -162,4 +187,10 @@ const myFunc = () => {
 
 export { myFunc };
 
+
+// instancer un tableau avec que des cellules mortes
+// A FAIRE /remplir ce tableau avec quelques cellules vivantes
+// calculer les nouveaux statuts et remplir progressivement un nouveau tableau
+// assigner la valeur de ce nouveau tableau a l´ancien tableau
+// itérer sur chaque cellule du tableau physique et leur donner une valeur en fonction du nouveau tableau
 
